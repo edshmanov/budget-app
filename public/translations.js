@@ -1,74 +1,110 @@
-// Translations
 const translations = {
     ru: {
-        currentBalance: 'Текущий баланс',
-        synced: 'Синхронизировано',
-        monthIncome: 'Доход (месяц)',
-        monthExpense: 'Расход (месяц)',
-        upcomingBills: 'Предстоящие счета',
-        navHome: 'Главная',
-        navAdd: 'Добавить',
-        navHistory: 'История',
-        navStats: 'Статистика'
+        balance: 'Текущий баланс', synced: 'Синхронизировано', saved: 'Сохранено',
+        monthIncome: 'Доход (месяц)', monthExpense: 'Расход (месяц)',
+        upcomingBills: 'Предстоящие счета', recentTrans: 'Последние транзакции',
+        income: 'Доход', expense: 'Расход', bill: 'Счёт',
+        amount: 'Сумма ($)', description: 'Описание', date: 'Дата', category: 'Категория',
+        addIncome: 'Добавить доход', addExpense: 'Добавить расход', addBill: 'Добавить счёт',
+        billName: 'Название счёта', dueDate: 'Срок оплаты', recurring: 'Регулярный платёж',
+        allTrans: 'Все транзакции', categoryStats: 'Расходы по категориям',
+        home: 'Главная', add: 'Добавить', history: 'История', stats: 'Статистика',
+        pay: 'Оплатить', delete: 'Удалить',
+        utilities: 'Коммуналка', education: 'Школа', subscriptions: 'Подписки',
+        creditCards: 'Кредитки', groceries: 'Продукты', transport: 'Транспорт',
+        entertainment: 'Развлечения', health: 'Здоровье', other: 'Другое',
+        noBills: 'Нет предстоящих счетов', noTrans: 'Нет транзакций',
+        noStats: 'Нет расходов для анализа',
+        overdue: 'Просрочен!', today: 'Сегодня', tomorrow: 'Завтра'
     },
     en: {
-        currentBalance: 'Current Balance',
-        synced: 'Synced',
-        monthIncome: 'Income (month)',
-        monthExpense: 'Expense (month)',
-        upcomingBills: 'Upcoming Bills',
-        navHome: 'Home',
-        navAdd: 'Add',
-        navHistory: 'History',
-        navStats: 'Stats'
+        balance: 'Current Balance', synced: 'Synced', saved: 'Saved',
+        monthIncome: 'Income (month)', monthExpense: 'Expense (month)',
+        upcomingBills: 'Upcoming Bills', recentTrans: 'Recent Transactions',
+        income: 'Income', expense: 'Expense', bill: 'Bill',
+        amount: 'Amount ($)', description: 'Description', date: 'Date', category: 'Category',
+        addIncome: 'Add Income', addExpense: 'Add Expense', addBill: 'Add Bill',
+        billName: 'Bill Name', dueDate: 'Due Date', recurring: 'Recurring payment',
+        allTrans: 'All Transactions', categoryStats: 'Expenses by Category',
+        home: 'Home', add: 'Add', history: 'History', stats: 'Stats',
+        pay: 'Pay', delete: 'Delete',
+        utilities: 'Utilities', education: 'Education', subscriptions: 'Subscriptions',
+        creditCards: 'Credit Cards', groceries: 'Groceries', transport: 'Transport',
+        entertainment: 'Entertainment', health: 'Health', other: 'Other',
+        noBills: 'No upcoming bills', noTrans: 'No transactions',
+        noStats: 'No expenses to analyze',
+        overdue: 'Overdue!', today: 'Today', tomorrow: 'Tomorrow'
     },
     uk: {
-        currentBalance: 'Поточний баланс',
-        synced: 'Синхронізовано',
-        monthIncome: 'Дохід (місяць)',
-        monthExpense: 'Витрати (місяць)',
-        upcomingBills: 'Майбутні рахунки',
-        navHome: 'Головна',
-        navAdd: 'Додати',
-        navHistory: 'Історія',
-        navStats: 'Статистика'
+        balance: 'Поточний баланс', synced: 'Синхронізовано', saved: 'Збережено',
+        monthIncome: 'Дохід (місяць)', monthExpense: 'Витрати (місяць)',
+        upcomingBills: 'Майбутні рахунки', recentTrans: 'Останні транзакції',
+        income: 'Дохід', expense: 'Витрата', bill: 'Рахунок',
+        amount: 'Сума ($)', description: 'Опис', date: 'Дата', category: 'Категорія',
+        addIncome: 'Додати дохід', addExpense: 'Додати витрату', addBill: 'Додати рахунок',
+        billName: 'Назва рахунку', dueDate: 'Термін оплати', recurring: 'Регулярний платіж',
+        allTrans: 'Всі транзакції', categoryStats: 'Витрати за категоріями',
+        home: 'Головна', add: 'Додати', history: 'Історія', stats: 'Статистика',
+        pay: 'Оплатити', delete: 'Видалити',
+        utilities: 'Комунальні', education: 'Школа', subscriptions: 'Підписки',
+        creditCards: 'Кредитки', groceries: 'Продукти', transport: 'Транспорт',
+        entertainment: 'Розваги', health: 'Здоров\'я', other: 'Інше',
+        noBills: 'Немає майбутніх рахунків', noTrans: 'Немає транзакцій',
+        noStats: 'Немає витрат для аналізу',
+        overdue: 'Прострочено!', today: 'Сьогодні', tomorrow: 'Завтра'
     }
 };
 
 let currentLang = localStorage.getItem('budgetAppLang') || 'ru';
 let currentTheme = localStorage.getItem('budgetAppTheme') || 'light';
 
-// Apply theme on load
 if (currentTheme === 'dark') {
     document.body.classList.add('dark-theme');
+    const btn = document.getElementById('themeBtn');
+    if (btn) btn.textContent = '☀️';
 }
 
-// Theme toggle
-const themeToggle = document.getElementById('themeToggle');
-if (themeToggle) {
-    themeToggle.addEventListener('click', () => {
-        document.body.classList.toggle('dark-theme');
-        currentTheme = document.body.classList.contains('dark-theme') ? 'dark' : 'light';
-        localStorage.setItem('budgetAppTheme', currentTheme);
-    });
-}
-
-// Language selector
-const langSelector = document.getElementById('langSelector');
-if (langSelector) {
-    langSelector.value = currentLang;
-    langSelector.addEventListener('change', (e) => {
-        currentLang = e.target.value;
-        localStorage.setItem('budgetAppLang', currentLang);
-        updateLanguage();
-    });
-}
-
-function updateLanguage() {
+function updateAppLanguage() {
     const t = translations[currentLang];
-    document.querySelectorAll('[data-i18n]').forEach(el => {
-        const key = el.getAttribute('data-i18n');
-        if (t[key]) el.textContent = t[key];
+    const els = {
+        balanceLabel: t.balance, syncStatus: t.synced,
+        incomeLabel: t.monthIncome, expenseLabel: t.monthExpense,
+        billsTitle: t.upcomingBills, transTitle: t.recentTrans,
+        tabIncome: t.income, tabExpense: t.expense, tabBill: t.bill,
+        amountLabel1: t.amount, amountLabel2: t.amount, amountLabel3: t.amount,
+        descLabel1: t.description, descLabel2: t.description,
+        dateLabel1: t.date, dateLabel2: t.date,
+        categoryLabel: t.category, categoryLabel2: t.category,
+        addIncomeBtn: t.addIncome, addExpenseBtn: t.addExpense, addBillBtn: t.addBill,
+        billNameLabel: t.billName, dueLabel: t.dueDate, recurringLabel: t.recurring,
+        allTransTitle: t.allTrans, statsTitle: t.categoryStats,
+        navHome: t.home, navAdd: t.add, navHistory: t.history, navStats: t.stats
+    };
+    Object.keys(els).forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = els[id];
+    });
+    
+    // Update categories
+    const cats = [
+        ['utilities', t.utilities], ['education', t.education],
+        ['subscriptions', t.subscriptions], ['creditCards', t.creditCards],
+        ['groceries', t.groceries], ['transport', t.transport],
+        ['entertainment', t.entertainment], ['health', t.health],
+        ['other', t.other]
+    ];
+    ['expenseCategory', 'billCategory'].forEach(id => {
+        const sel = document.getElementById(id);
+        if (sel) {
+            const val = sel.value;
+            sel.innerHTML = cats.map(([v, n]) => `<option value="${v}">${n}</option>`).join('');
+            sel.value = val || 'utilities';
+        }
+    });
+    
+    // Update lang buttons
+    document.querySelectorAll('.lang-btn-app').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.lang === currentLang);
     });
 }
 
@@ -76,4 +112,30 @@ function t(key) {
     return translations[currentLang][key] || key;
 }
 
-setTimeout(updateLanguage, 100);
+function getCategoryName(key) {
+    return translations[currentLang][key] || key;
+}
+
+// Init on load
+setTimeout(() => {
+    updateAppLanguage();
+    
+    document.querySelectorAll('.lang-btn-app').forEach(btn => {
+        btn.addEventListener('click', () => {
+            currentLang = btn.dataset.lang;
+            localStorage.setItem('budgetAppLang', currentLang);
+            updateAppLanguage();
+            if (window.updateUI) updateUI();
+        });
+    });
+    
+    const themeBtn = document.getElementById('themeBtn');
+    if (themeBtn) {
+        themeBtn.addEventListener('click', () => {
+            document.body.classList.toggle('dark-theme');
+            currentTheme = document.body.classList.contains('dark-theme') ? 'dark' : 'light';
+            localStorage.setItem('budgetAppTheme', currentTheme);
+            themeBtn.textContent = currentTheme === 'dark' ? '☀️' : '🌙';
+        });
+    }
+}, 100);

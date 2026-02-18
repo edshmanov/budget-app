@@ -3,141 +3,277 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Вход - Семейный бюджет</title>
+    <title>Sign In - Family Budget</title>
     <style>
         * {margin: 0; padding: 0; box-sizing: border-box;}
         :root {
-            --bg-start: #667eea; --bg-end: #764ba2;
-            --card-bg: #fff; --text: #333; --text-sec: #666;
+            --primary: #667eea;
+            --primary-dark: #5568d3;
+            --bg-light: #f8f9fa;
+            --text: #2d3748;
+            --text-light: #718096;
+            --border: #e2e8f0;
+            --success: #48bb78;
+            --error: #f56565;
         }
         body.dark-theme {
-            --bg-start: #1a1a2e; --bg-end: #16213e;
-            --card-bg: #0f3460; --text: #e4e4e4; --text-sec: #b0b0b0;
+            --bg-light: #1a202c;
+            --text: #e2e8f0;
+            --text-light: #a0aec0;
+            --border: #2d3748;
         }
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, var(--bg-start) 0%, var(--bg-end) 100%);
-            min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px;
-            transition: background 0.3s;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
         }
-        .settings-bar {position: fixed; top: 20px; right: 20px; display: flex; gap: 10px; z-index: 1000;}
-        .icon-btn, .lang-selector {
-            background: rgba(255,255,255,0.2); backdrop-filter: blur(10px);
-            border: none; border-radius: 20px; cursor: pointer; transition: all 0.3s;
+        .controls {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 8px;
+            z-index: 100;
         }
-        .icon-btn {width: 40px; height: 40px; border-radius: 50%; font-size: 20px; display: flex; align-items: center; justify-content: center;}
-        .icon-btn:hover {background: rgba(255,255,255,0.3); transform: scale(1.1);}
-        .lang-selector {padding: 8
-cat > public/login.html << 'ENDOFFILE'
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Вход - Семейный бюджет</title>
-    <style>
-        * {margin: 0; padding: 0; box-sizing: border-box;}
-        :root {
-            --bg-start: #667eea; --bg-end: #764ba2;
-            --card-bg: #fff; --text: #333; --text-sec: #666;
+        .lang-btn, .theme-btn {
+            background: rgba(255,255,255,0.95);
+            border: none;
+            padding: 8px 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 13px;
+            color: var(--primary);
+            transition: all 0.2s;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
-        body.dark-theme {
-            --bg-start: #1a1a2e; --bg-end: #16213e;
-            --card-bg: #0f3460; --text: #e4e4e4; --text-sec: #b0b0b0;
+        .lang-btn:hover, .theme-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
         }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, var(--bg-start) 0%, var(--bg-end) 100%);
-            min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px;
-            transition: background 0.3s;
+        .lang-btn.active {
+            background: var(--primary);
+            color: white;
         }
-        .settings-bar {position: fixed; top: 20px; right: 20px; display: flex; gap: 10px; z-index: 1000;}
-        .icon-btn, .lang-selector {
-            background: rgba(255,255,255,0.2); backdrop-filter: blur(10px);
-            border: none; border-radius: 20px; cursor: pointer; transition: all 0.3s;
+        .theme-btn {
+            font-size: 18px;
+            padding: 8px 12px;
         }
-        .icon-btn {width: 40px; height: 40px; border-radius: 50%; font-size: 20px; display: flex; align-items: center; justify-content: center;}
-        .icon-btn:hover {background: rgba(255,255,255,0.3); transform: scale(1.1);}
-        .lang-selector {padding: 8px 15px; color: white; font-weight: bold;}
-        .lang-selector:hover {background: rgba(255,255,255,0.3);}
-        .login-container {background: var(--card-bg); padding: 40px; border-radius: 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); width: 100%; max-width: 400px; transition: background 0.3s;}
-        .logo {text-align: center; margin-bottom: 30px;}
-        .logo-icon {font-size: 60px; margin-bottom: 10px;}
-        h1 {text-align: center; color: var(--text); margin-bottom: 10px; font-size: 28px;}
-        .subtitle {text-align: center; color: var(--text-sec); margin-bottom: 30px; font-size: 14px;}
-        .form-group {margin-bottom: 20px;}
-        label {display: block; margin-bottom: 8px; color: var(--text); font-weight: 500; font-size: 14px;}
-        input {width: 100%; padding: 15px; border: 2px solid #e5e7eb; border-radius: 10px; font-size: 16px; background: var(--card-bg); color: var(--text);}
-        input:focus {outline: none; border-color: #667eea;}
-        .btn-login {width: 100%; padding: 15px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 10px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 10px;}
-        .btn-login:active {transform: scale(0.98);}
-        .error-message {background: #fee; color: #c00; padding: 12px; border-radius: 8px; margin-bottom: 20px; font-size: 14px; display: none;}
-        .error-message.show {display: block;}
-        .loading {text-align: center; margin-top: 10px; color: var(--text-sec); font-size: 14px; display: none;}
+        .container {
+            background: white;
+            padding: 48px;
+            border-radius: 24px;
+            box-shadow: 0 24px 48px rgba(0,0,0,0.2);
+            width: 100%;
+            max-width: 420px;
+        }
+        body.dark-theme .container {
+            background: #2d3748;
+        }
+        .logo {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+        .logo-icon {
+            font-size: 64px;
+            margin-bottom: 16px;
+            display: block;
+        }
+        h1 {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 8px;
+        }
+        .subtitle {
+            color: var(--text-light);
+            font-size: 15px;
+            margin-bottom: 32px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            font-weight: 500;
+            font-size: 14px;
+            color: var(--text);
+            margin-bottom: 8px;
+        }
+        input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            font-size: 16px;
+            color: var(--text);
+            background: var(--bg-light);
+            transition: all 0.2s;
+        }
+        input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(102,126,234,0.1);
+        }
+        .btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-top: 8px;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(102,126,234,0.4);
+        }
+        .btn:active {
+            transform: translateY(0);
+        }
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .error {
+            background: #fff5f5;
+            color: var(--error);
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            margin-bottom: 20px;
+            display: none;
+            border-left: 4px solid var(--error);
+        }
+        .error.show {display: block;}
+        .loading {
+            text-align: center;
+            color: var(--text-light);
+            font-size: 14px;
+            margin-top: 12px;
+            display: none;
+        }
         .loading.show {display: block;}
     </style>
 </head>
 <body>
-    <div class="settings-bar">
-        <select class="lang-selector" id="langSelector">
-            <option value="ru">🇷🇺</option>
-            <option value="en">🇺🇸</option>
-            <option value="uk">🇺🇦</option>
-        </select>
-        <button class="icon-btn" id="themeToggle"><span id="themeIcon">🌙</span></button>
+    <div class="controls">
+        <button class="lang-btn active" data-lang="ru">RU</button>
+        <button class="lang-btn" data-lang="en">EN</button>
+        <button class="lang-btn" data-lang="uk">UA</button>
+        <button class="theme-btn" id="themeBtn">🌙</button>
     </div>
-    <div class="login-container">
-        <div class="logo"><div class="logo-icon">💰</div></div>
-        <h1 data-i18n="title">Семейный бюджет</h1>
-        <div class="subtitle" data-i18n="subtitle">Войдите в свой аккаунт</div>
-        <div id="errorMessage" class="error-message"></div>
+    <div class="container">
+        <div class="logo">
+            <span class="logo-icon">💰</span>
+            <h1 id="title">Семейный бюджет</h1>
+            <div class="subtitle" id="subtitle">Войдите в свой аккаунт</div>
+        </div>
+        <div id="error" class="error"></div>
         <form id="loginForm">
             <div class="form-group">
-                <label for="email" data-i18n="email">Email</label>
+                <label id="emailLabel">Email</label>
                 <input type="email" id="email" required autocomplete="email">
             </div>
             <div class="form-group">
-                <label for="password" data-i18n="password">Пароль</label>
+                <label id="passwordLabel">Пароль</label>
                 <input type="password" id="password" required autocomplete="current-password">
             </div>
-            <button type="submit" class="btn-login" id="loginBtn" data-i18n="loginBtn">Войти</button>
-            <div id="loading" class="loading" data-i18n="loading">Вход...</div>
+            <button type="submit" class="btn" id="submitBtn">Войти</button>
+            <div class="loading" id="loading">Вход...</div>
         </form>
     </div>
-    <script src="translations.js"></script>
     <script>
-        const t = {
-            ru: {title: 'Семейный бюджет', subtitle: 'Войдите в свой аккаунт', email: 'Email', password: 'Пароль', loginBtn: 'Войти', loading: 'Вход...', errorInvalid: 'Неверный email или пароль', errorConnection: 'Ошибка подключения'},
-            en: {title: 'Family Budget', subtitle: 'Sign in to your account', email: 'Email', password: 'Password', loginBtn: 'Sign In', loading: 'Signing in...', errorInvalid: 'Invalid email or password', errorConnection: 'Connection error'},
-            uk: {title: 'Сімейний бюджет', subtitle: 'Увійдіть до свого акаунту', email: 'Email', password: 'Пароль', loginBtn: 'Увійти', loading: 'Вхід...', errorInvalid: 'Невірний email або пароль', errorConnection: 'Помилка підключення'}
+        const translations = {
+            ru: {title: 'Семейный бюджет', subtitle: 'Войдите в свой аккаунт', email: 'Email', password: 'Пароль', submit: 'Войти', loading: 'Вход...', errorInvalid: 'Неверный email или пароль', errorConnection: 'Ошибка подключения'},
+            en: {title: 'Family Budget', subtitle: 'Sign in to your account', email: 'Email', password: 'Password', submit: 'Sign In', loading: 'Signing in...', errorInvalid: 'Invalid email or password', errorConnection: 'Connection error'},
+            uk: {title: 'Сімейний бюджет', subtitle: 'Увійдіть до свого акаунту', email: 'Email', password: 'Пароль', submit: 'Увійти', loading: 'Вхід...', errorInvalid: 'Невірний email або пароль', errorConnection: 'Помилка підключення'}
         };
         let lang = localStorage.getItem('budgetAppLang') || 'ru';
         let theme = localStorage.getItem('budgetAppTheme') || 'light';
-        if (theme === 'dark') {document.body.classList.add('dark-theme'); document.getElementById('themeIcon').textContent = '☀️';}
-        document.getElementById('langSelector').value = lang;
-        function updateLang() {document.querySelectorAll('[data-i18n]').forEach(el => {const key = el.getAttribute('data-i18n'); if (t[lang][key]) el.textContent = t[lang][key];});}
+        
+        // Apply theme
+        if (theme === 'dark') {
+            document.body.classList.add('dark-theme');
+            document.getElementById('themeBtn').textContent = '☀️';
+        }
+        
+        // Update language
+        function updateLang() {
+            const t = translations[lang];
+            document.getElementById('title').textContent = t.title;
+            document.getElementById('subtitle').textContent = t.subtitle;
+            document.getElementById('emailLabel').textContent = t.email;
+            document.getElementById('passwordLabel').textContent = t.password;
+            document.getElementById('submitBtn').textContent = t.submit;
+            document.getElementById('loading').textContent = t.loading;
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.lang === lang);
+            });
+        }
         updateLang();
-        document.getElementById('themeToggle').addEventListener('click', () => {
+        
+        // Language switcher
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                lang = btn.dataset.lang;
+                localStorage.setItem('budgetAppLang', lang);
+                updateLang();
+            });
+        });
+        
+        // Theme switcher
+        document.getElementById('themeBtn').addEventListener('click', () => {
             document.body.classList.toggle('dark-theme');
             theme = document.body.classList.contains('dark-theme') ? 'dark' : 'light';
             localStorage.setItem('budgetAppTheme', theme);
-            document.getElementById('themeIcon').textContent = theme === 'dark' ? '☀️' : '🌙';
+            document.getElementById('themeBtn').textContent = theme === 'dark' ? '☀️' : '🌙';
         });
-        document.getElementById('langSelector').addEventListener('change', (e) => {lang = e.target.value; localStorage.setItem('budgetAppLang', lang); updateLang();});
+        
+        // Login form
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const errorMessage = document.getElementById('errorMessage');
+            const error = document.getElementById('error');
             const loading = document.getElementById('loading');
-            const loginBtn = document.getElementById('loginBtn');
-            errorMessage.classList.remove('show');
+            const submitBtn = document.getElementById('submitBtn');
+            const t = translations[lang];
+            
+            error.classList.remove('show');
             loading.classList.add('show');
-            loginBtn.disabled = true;
+            submitBtn.disabled = true;
+            
             try {
-                const response = await fetch('/api/login', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({email: document.getElementById('email').value, password: document.getElementById('password').value})});
-                if (response.ok) {window.location.href = '/';} 
-                else {errorMessage.textContent = t[lang].errorInvalid; errorMessage.classList.add('show');}
-            } catch (error) {errorMessage.textContent = t[lang].errorConnection; errorMessage.classList.add('show');}
-            finally {loading.classList.remove('show'); loginBtn.disabled = false;}
+                const response = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        email: document.getElementById('email').value,
+                        password: document.getElementById('password').value
+                    })
+                });
+                
+                if (response.ok) {
+                    window.location.href = '/';
+                } else {
+                    error.textContent = t.errorInvalid;
+                    error.classList.add('show');
+                }
+            } catch (err) {
+                error.textContent = t.errorConnection;
+                error.classList.add('show');
+            } finally {
+                loading.classList.remove('show');
+                submitBtn.disabled = false;
+            }
         });
     </script>
 </body>
