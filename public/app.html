@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#667eea">
+    <title>Семейный бюджет</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            padding-bottom: 80px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .logout-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 8px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .balance-card {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .balance-amount {
+            font-size: 48px;
+            font-weight: bold;
+            color: #667eea;
+            margin: 10px 0;
+        }
+
+        .balance-label {
+            color: #666;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .stat-box {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 5px 0;
+        }
+
+        .stat-value.income {
+            color: #10b981;
+        }
+
+        .stat-value.expense {
+            color: #ef4444;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #666;
+            text-transform: uppercase;
+        }
+
+        .section {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #eee;
+        }
+
+        .tab {
+            padding: 10px 20px;
+            background: none;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+            color: #666;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .tab.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+            font-weight: bold;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border 0.3s;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .transaction-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .transaction-item {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .transaction-item:last-child {
+            border-bottom: none;
+        }
+
+        .transaction-info {
+            flex: 1;
+        }
+
+        .transaction-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .transaction-meta {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .transaction-amount {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .transaction-amount.income {
+            color: #10b981;
+        }
+
+        .transaction-amount.expense {
+            color: #ef4444;
+        }
+
+        .bill-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            border-left: 4px solid #667eea;
+        }
+
+        .bill-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+
+        .bill-name {
+            font-weight: bold;
+        }
+
+        .bill-amount {
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .bill-due {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .bill-overdue {
+            color: #ef4444;
+            font-weight: bold;
+        }
+
+        .btn-pay {
+            margin-top: 10px;
+            padding: 8px 15px;
+            background: #10b981;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 14px;
+            cursor: pointer;
+            width: auto;
+        }
+
+        .btn-delete {
+            padding: 5px 10px;
+            background: #ef4444;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 12px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #999;
+        }
+
+        .category-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .category-bar {
+            height: 8px;
+            background: #e5e7eb;
+            border-radius: 4px;
+            margin-top: 5px;
+            overflow: hidden;
+        }
+
+        .category-fill {
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            transition: width 0.3s;
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            display: flex;
+            justify-content: space-around;
+            padding: 15px;
+            box-shadow: 0 -5px 20px rgba(0,0,0,0.1);
+        }
+
+        .nav-item {
+            text-align: center;
+            cursor: pointer;
+            padding: 5px;
+            color: #666;
+            flex: 1;
+        }
+
+        .nav-item.active {
+            color: #667eea;
+        }
+
+        .nav-icon {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+
+        .nav-label {
+            font-size: 11px;
+        }
+
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: auto;
+            margin-right: 10px;
+        }
+
+        .sync-status {
+            font-size: 12px;
+            color: #10b981;
+            text-align: center;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Главная страница -->
+        <div id="homePage" class="page active">
+            <div class="header">
+                <button class="logout-btn" onclick="logout()">Выйти</button>
+                <div class="balance-card">
+                    <div class="balance-label">Текущий баланс</div>
+                    <div class="balance-amount" id="currentBalance">$0</div>
+                    <div class="sync-status" id="syncStatus">✓ Синхронизировано</div>
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-box">
+                        <div class="stat-label">Доход (месяц)</div>
+                        <div class="stat-value income" id="monthIncome">$0</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-label">Расход (месяц)</div>
+                        <div class="stat-value expense" id="monthExpense">$0</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">Предстоящие счета</div>
+                <div id="upcomingBills"></div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">Последние транзакции</div>
+                <div id="recentTransactions"></div>
+            </div>
+        </div>
+
+        <!-- Страница добавления -->
+        <div id="addPage" class="page">
+            <div class="section">
+                <div class="tabs">
+                    <button class="tab active" onclick="switchTab('income')">Доход</button>
+                    <button class="tab" onclick="switchTab('expense')">Расход</button>
+                    <button class="tab" onclick="switchTab('bill')">Счёт</button>
+                </div>
+
+                <!-- Форма дохода -->
+                <div id="incomeTab" class="tab-content active">
+                    <form id="incomeForm">
+                        <div class="form-group">
+                            <label>Сумма ($)</label>
+                            <input type="number" id="incomeAmount" step="0.01" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Описание</label>
+                            <input type="text" id="incomeDescription" placeholder="Например: Зарплата за неделю">
+                        </div>
+                        <div class="form-group">
+                            <label>Дата</label>
+                            <input type="date" id="incomeDate" required>
+                        </div>
+                        <button type="submit" class="btn">Добавить доход</button>
+                    </form>
+                </div>
+
+                <!-- Форма расхода -->
+                <div id="expenseTab" class="tab-content">
+                    <form id="expenseForm">
+                        <div class="form-group">
+                            <label>Сумма ($)</label>
+                            <input type="number" id="expenseAmount" step="0.01" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Категория</label>
+                            <select id="expenseCategory" required>
+                                <option value="Коммунальные услуги">Коммунальные услуги</option>
+                                <option value="Школа/образование">Школа/образование</option>
+                                <option value="Подписки">Подписки</option>
+                                <option value="Погашение кредиток">Погашение кредиток</option>
+                                <option value="Продукты">Продукты</option>
+                                <option value="Транспорт">Транспорт</option>
+                                <option value="Развлечения">Развлечения</option>
+                                <option value="Здоровье">Здоровье</option>
+                                <option value="Другое">Другое</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Описание</label>
+                            <input type="text" id="expenseDescription" placeholder="Например: Оплата за электричество">
+                        </div>
+                        <div class="form-group">
+                            <label>Дата</label>
+                            <input type="date" id="expenseDate" required>
+                        </div>
+                        <button type="submit" class="btn">Добавить расход</button>
+                    </form>
+                </div>
+
+                <!-- Форма счёта -->
+                <div id="billTab" class="tab-content">
+                    <form id="billForm">
+                        <div class="form-group">
+                            <label>Название счёта</label>
+                            <input type="text" id="billName" placeholder="Например: Коммуналка" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Сумма ($)</label>
+                            <input type="number" id="billAmount" step="0.01" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Срок оплаты</label>
+                            <input type="date" id="billDue" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Категория</label>
+                            <select id="billCategory" required>
+                                <option value="Коммунальные услуги">Коммунальные услуги</option>
+                                <option value="Школа/образование">Школа/образование</option>
+                                <option value="Подписки">Подписки</option>
+                                <option value="Погашение кредиток">Погашение кредиток</option>
+                                <option value="Другое">Другое</option>
+                            </select>
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="billRecurring">
+                            <label for="billRecurring">Регулярный платёж (ежемесячно)</label>
+                        </div>
+                        <button type="submit" class="btn">Добавить счёт</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Страница транзакций -->
+        <div id="transactionsPage" class="page">
+            <div class="section">
+                <div class="section-title">Все транзакции</div>
+                <div class="transaction-list" id="allTransactions"></div>
+            </div>
+        </div>
+
+        <!-- Страница статистики -->
+        <div id="statsPage" class="page">
+            <div class="section">
+                <div class="section-title">Расходы по категориям</div>
+                <div id="categoryStats"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Нижняя навигация -->
+    <div class="bottom-nav">
+        <div class="nav-item active" onclick="navigateTo('home')">
+            <div class="nav-icon">🏠</div>
+            <div class="nav-label">Главная</div>
+        </div>
+        <div class="nav-item" onclick="navigateTo('add')">
+            <div class="nav-icon">➕</div>
+            <div class="nav-label">Добавить</div>
+        </div>
+        <div class="nav-item" onclick="navigateTo('transactions')">
+            <div class="nav-icon">📋</div>
+            <div class="nav-label">История</div>
+        </div>
+        <div class="nav-item" onclick="navigateTo('stats')">
+            <div class="nav-icon">📊</div>
+            <div class="nav-label">Статистика</div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
