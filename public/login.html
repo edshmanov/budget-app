@@ -5,219 +5,139 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Вход - Семейный бюджет</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        * {margin: 0; padding: 0; box-sizing: border-box;}
+        :root {
+            --bg-start: #667eea; --bg-end: #764ba2;
+            --card-bg: #fff; --text: #333; --text-sec: #666;
         }
-
+        body.dark-theme {
+            --bg-start: #1a1a2e; --bg-end: #16213e;
+            --card-bg: #0f3460; --text: #e4e4e4; --text-sec: #b0b0b0;
+        }
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, var(--bg-start) 0%, var(--bg-end) 100%);
+            min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px;
+            transition: background 0.3s;
         }
-
-        .login-container {
-            background: white;
-            padding: 40px;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            width: 100%;
-            max-width: 400px;
+        .settings-bar {position: fixed; top: 20px; right: 20px; display: flex; gap: 10px; z-index: 1000;}
+        .icon-btn, .lang-selector {
+            background: rgba(255,255,255,0.2); backdrop-filter: blur(10px);
+            border: none; border-radius: 20px; cursor: pointer; transition: all 0.3s;
         }
-
-        .logo {
-            text-align: center;
-            margin-bottom: 30px;
+        .icon-btn {width: 40px; height: 40px; border-radius: 50%; font-size: 20px; display: flex; align-items: center; justify-content: center;}
+        .icon-btn:hover {background: rgba(255,255,255,0.3); transform: scale(1.1);}
+        .lang-selector {padding: 8
+cat > public/login.html << 'ENDOFFILE'
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Вход - Семейный бюджет</title>
+    <style>
+        * {margin: 0; padding: 0; box-sizing: border-box;}
+        :root {
+            --bg-start: #667eea; --bg-end: #764ba2;
+            --card-bg: #fff; --text: #333; --text-sec: #666;
         }
-
-        .logo-icon {
-            font-size: 60px;
-            margin-bottom: 10px;
+        body.dark-theme {
+            --bg-start: #1a1a2e; --bg-end: #16213e;
+            --card-bg: #0f3460; --text: #e4e4e4; --text-sec: #b0b0b0;
         }
-
-        h1 {
-            text-align: center;
-            color: #333;
-            margin-bottom: 10px;
-            font-size: 28px;
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, var(--bg-start) 0%, var(--bg-end) 100%);
+            min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px;
+            transition: background 0.3s;
         }
-
-        .subtitle {
-            text-align: center;
-            color: #666;
-            margin-bottom: 30px;
-            font-size: 14px;
+        .settings-bar {position: fixed; top: 20px; right: 20px; display: flex; gap: 10px; z-index: 1000;}
+        .icon-btn, .lang-selector {
+            background: rgba(255,255,255,0.2); backdrop-filter: blur(10px);
+            border: none; border-radius: 20px; cursor: pointer; transition: all 0.3s;
         }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 8px;
-            color: #333;
-            font-weight: 500;
-            font-size: 14px;
-        }
-
-        input {
-            width: 100%;
-            padding: 15px;
-            border: 2px solid #e5e7eb;
-            border-radius: 10px;
-            font-size: 16px;
-            transition: border 0.3s;
-        }
-
-        input:focus {
-            outline: none;
-            border-color: #667eea;
-        }
-
-        .btn-login {
-            width: 100%;
-            padding: 15px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: transform 0.2s;
-            margin-top: 10px;
-        }
-
-        .btn-login:active {
-            transform: scale(0.98);
-        }
-
-        .btn-login:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
-
-        .error-message {
-            background: #fee;
-            color: #c00;
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            font-size: 14px;
-            display: none;
-        }
-
-        .error-message.show {
-            display: block;
-        }
-
-        .loading {
-            text-align: center;
-            margin-top: 10px;
-            color: #666;
-            font-size: 14px;
-            display: none;
-        }
-
-        .loading.show {
-            display: block;
-        }
+        .icon-btn {width: 40px; height: 40px; border-radius: 50%; font-size: 20px; display: flex; align-items: center; justify-content: center;}
+        .icon-btn:hover {background: rgba(255,255,255,0.3); transform: scale(1.1);}
+        .lang-selector {padding: 8px 15px; color: white; font-weight: bold;}
+        .lang-selector:hover {background: rgba(255,255,255,0.3);}
+        .login-container {background: var(--card-bg); padding: 40px; border-radius: 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); width: 100%; max-width: 400px; transition: background 0.3s;}
+        .logo {text-align: center; margin-bottom: 30px;}
+        .logo-icon {font-size: 60px; margin-bottom: 10px;}
+        h1 {text-align: center; color: var(--text); margin-bottom: 10px; font-size: 28px;}
+        .subtitle {text-align: center; color: var(--text-sec); margin-bottom: 30px; font-size: 14px;}
+        .form-group {margin-bottom: 20px;}
+        label {display: block; margin-bottom: 8px; color: var(--text); font-weight: 500; font-size: 14px;}
+        input {width: 100%; padding: 15px; border: 2px solid #e5e7eb; border-radius: 10px; font-size: 16px; background: var(--card-bg); color: var(--text);}
+        input:focus {outline: none; border-color: #667eea;}
+        .btn-login {width: 100%; padding: 15px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 10px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 10px;}
+        .btn-login:active {transform: scale(0.98);}
+        .error-message {background: #fee; color: #c00; padding: 12px; border-radius: 8px; margin-bottom: 20px; font-size: 14px; display: none;}
+        .error-message.show {display: block;}
+        .loading {text-align: center; margin-top: 10px; color: var(--text-sec); font-size: 14px; display: none;}
+        .loading.show {display: block;}
     </style>
 </head>
 <body>
+    <div class="settings-bar">
+        <select class="lang-selector" id="langSelector">
+            <option value="ru">🇷🇺</option>
+            <option value="en">🇺🇸</option>
+            <option value="uk">🇺🇦</option>
+        </select>
+        <button class="icon-btn" id="themeToggle"><span id="themeIcon">🌙</span></button>
+    </div>
     <div class="login-container">
-        <div class="logo">
-            <div class="logo-icon">💰</div>
-        </div>
-        <h1>Семейный бюджет</h1>
-        <div class="subtitle">Войдите в свой аккаунт</div>
-
+        <div class="logo"><div class="logo-icon">💰</div></div>
+        <h1 data-i18n="title">Семейный бюджет</h1>
+        <div class="subtitle" data-i18n="subtitle">Войдите в свой аккаунт</div>
         <div id="errorMessage" class="error-message"></div>
-
         <form id="loginForm">
             <div class="form-group">
-                <label for="email">Email</label>
-                <input 
-                    type="email" 
-                    id="email" 
-                    name="email" 
-                    placeholder="your@email.com"
-                    required
-                    autocomplete="email"
-                >
+                <label for="email" data-i18n="email">Email</label>
+                <input type="email" id="email" required autocomplete="email">
             </div>
-
             <div class="form-group">
-                <label for="password">Пароль</label>
-                <input 
-                    type="password" 
-                    id="password" 
-                    name="password" 
-                    placeholder="Введите пароль"
-                    required
-                    autocomplete="current-password"
-                >
+                <label for="password" data-i18n="password">Пароль</label>
+                <input type="password" id="password" required autocomplete="current-password">
             </div>
-
-            <button type="submit" class="btn-login" id="loginBtn">
-                Войти
-            </button>
-
-            <div id="loading" class="loading">
-                Вход...
-            </div>
+            <button type="submit" class="btn-login" id="loginBtn" data-i18n="loginBtn">Войти</button>
+            <div id="loading" class="loading" data-i18n="loading">Вход...</div>
         </form>
     </div>
-
+    <script src="translations.js"></script>
     <script>
-        const loginForm = document.getElementById('loginForm');
-        const errorMessage = document.getElementById('errorMessage');
-        const loading = document.getElementById('loading');
-        const loginBtn = document.getElementById('loginBtn');
-
-        loginForm.addEventListener('submit', async (e) => {
+        const t = {
+            ru: {title: 'Семейный бюджет', subtitle: 'Войдите в свой аккаунт', email: 'Email', password: 'Пароль', loginBtn: 'Войти', loading: 'Вход...', errorInvalid: 'Неверный email или пароль', errorConnection: 'Ошибка подключения'},
+            en: {title: 'Family Budget', subtitle: 'Sign in to your account', email: 'Email', password: 'Password', loginBtn: 'Sign In', loading: 'Signing in...', errorInvalid: 'Invalid email or password', errorConnection: 'Connection error'},
+            uk: {title: 'Сімейний бюджет', subtitle: 'Увійдіть до свого акаунту', email: 'Email', password: 'Пароль', loginBtn: 'Увійти', loading: 'Вхід...', errorInvalid: 'Невірний email або пароль', errorConnection: 'Помилка підключення'}
+        };
+        let lang = localStorage.getItem('budgetAppLang') || 'ru';
+        let theme = localStorage.getItem('budgetAppTheme') || 'light';
+        if (theme === 'dark') {document.body.classList.add('dark-theme'); document.getElementById('themeIcon').textContent = '☀️';}
+        document.getElementById('langSelector').value = lang;
+        function updateLang() {document.querySelectorAll('[data-i18n]').forEach(el => {const key = el.getAttribute('data-i18n'); if (t[lang][key]) el.textContent = t[lang][key];});}
+        updateLang();
+        document.getElementById('themeToggle').addEventListener('click', () => {
+            document.body.classList.toggle('dark-theme');
+            theme = document.body.classList.contains('dark-theme') ? 'dark' : 'light';
+            localStorage.setItem('budgetAppTheme', theme);
+            document.getElementById('themeIcon').textContent = theme === 'dark' ? '☀️' : '🌙';
+        });
+        document.getElementById('langSelector').addEventListener('change', (e) => {lang = e.target.value; localStorage.setItem('budgetAppLang', lang); updateLang();});
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-
-            // Скрываем ошибки
+            const errorMessage = document.getElementById('errorMessage');
+            const loading = document.getElementById('loading');
+            const loginBtn = document.getElementById('loginBtn');
             errorMessage.classList.remove('show');
             loading.classList.add('show');
             loginBtn.disabled = true;
-
             try {
-                const response = await fetch('/api/login', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ email, password })
-                });
-
-                const data = await response.json();
-
-                if (response.ok) {
-                    // Успешный вход
-                    window.location.href = '/';
-                } else {
-                    // Ошибка входа
-                    errorMessage.textContent = 'Неверный email или пароль';
-                    errorMessage.classList.add('show');
-                }
-            } catch (error) {
-                errorMessage.textContent = 'Ошибка подключения. Попробуйте снова.';
-                errorMessage.classList.add('show');
-            } finally {
-                loading.classList.remove('show');
-                loginBtn.disabled = false;
-            }
+                const response = await fetch('/api/login', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({email: document.getElementById('email').value, password: document.getElementById('password').value})});
+                if (response.ok) {window.location.href = '/';} 
+                else {errorMessage.textContent = t[lang].errorInvalid; errorMessage.classList.add('show');}
+            } catch (error) {errorMessage.textContent = t[lang].errorConnection; errorMessage.classList.add('show');}
+            finally {loading.classList.remove('show'); loginBtn.disabled = false;}
         });
     </script>
 </body>
