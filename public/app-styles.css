@@ -242,3 +242,73 @@ input:focus, select:focus {
 .negative {
     color: #fbb6ce;
 }
+
+/* ПОДПИСКИ */
+.subscriptions-section {
+    background: var(--card-bg);
+    border-left: 4px solid #9f7aea;
+}
+.subscription-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+.subscription-icon {
+    font-size: 24px;
+    margin-right: 8px;
+}
+.subscription-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text);
+}
+.subscription-total {
+    text-align: right;
+}
+.subscription-amount {
+    font-size: 28px;
+    font-weight: 700;
+    color: #9f7aea;
+}
+#subsPerMonth {
+    font-size: 11px;
+    color: var(--text-light);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: block;
+    margin-bottom: 4px;
+}
+.subscription-item {
+    background: var(--stat-bg);
+    padding: 12px 14px;
+    border-radius: 10px;
+    margin-bottom: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background 0.3s;
+}
+.subscription-info {
+    flex: 1;
+}
+.subscription-name {
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 4px;
+}
+.subscription-next {
+    font-size: 12px;
+    color: var(--text-light);
+}
+.subscription-price {
+    font-size: 18px;
+    font-weight: 700;
+    color: #9f7aea;
+}
+.subscription-empty {
+    text-align: center;
+    padding: 30px 20px;
+    color: var(--text-light);
+    font-size: 14px;
+}

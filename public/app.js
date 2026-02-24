@@ -42,7 +42,6 @@ function showSyncStatus() {
     }
 }
 
-// УВЕДОМЛЕНИЯ О СЧЕТАХ
 async function requestNotificationPermission() {
     if (!('Notification' in window)) {
         console.log('Браузер не поддерживает уведомления');
@@ -74,7 +73,6 @@ function checkBillNotifications() {
         const dueDate = new Date(bill.due);
         dueDate.setHours(0, 0, 0, 0);
         
-        // Уведомление за день до срока
         if (dueDate.getTime() === tomorrow.getTime()) {
             showNotification(
                 '⏰ Напоминание о счёте',
@@ -82,7 +80,6 @@ function checkBillNotifications() {
             );
         }
         
-        // Уведомление о просрочке
         if (dueDate < today) {
             showNotification(
                 '🚨 Просроченный счёт!',
@@ -243,6 +240,7 @@ function deleteBill(billId) {
 function updateUI() {
     updateBalance();
     updateSavingsCalculator();
+    updateSubscriptions();
     updateUpcomingBills();
     updateRecentTransactions();
     updateAllTransactions();
@@ -269,7 +267,6 @@ function updateBalance() {
     document.getElementById('monthExpense').textContent = '$' + monthExpense.toFixed(2);
 }
 
-// КАЛЬКУЛЯТОР НАКОПЛЕНИЙ
 function updateSavingsCalculator() {
     const unpaidBills = data.bills.filter(b => !b.paid);
     const totalBills = unpaidBills.reduce((sum, bill) => sum + bill.amount, 0);
@@ -280,7 +277,6 @@ function updateSavingsCalculator() {
     document.getElementById('calcBillsAmount').textContent = '-$' + totalBills.toFixed(2);
     document.getElementById('calcFreeAmount').textContent = '$' + savingsAmount.toFixed(2);
     
-    // Меняем цвет если нельзя откладывать
     const calcAmount = document.getElementById('savingsAmount');
     const calcFree = document.getElementById('calcFreeAmount');
     if (savingsAmount < 0) {
@@ -290,6 +286,35 @@ function updateSavingsCalculator() {
         calcAmount.style.color = 'white';
         calcFree.style.color = 'white';
     }
+}
+
+// ПОДПИСКИ
+function updateSubscriptions() {
+    const container = document.getElementById('subscriptionsList');
+    const subscriptions = data.bills.filter(b => b.category === 'subscriptions' && b.recurring);
+    
+    const totalMonth = subscriptions.reduce((sum, sub) => sum + sub.amount, 0);
+    document.getElementById('subsTotal').textContent = '$' + totalMonth.toFixed(2);
+    
+    if (subscriptions.length === 0) {
+        container.innerHTML = `<div class="subscription-empty">${t('noSubscriptions') || 'Нет активных подписок'}</div>`;
+        return;
+    }
+    
+    container.innerHTML = subscriptions.map(sub => {
+        const nextDate = new Date(sub.due);
+        const dateStr = formatDate(sub.due);
+        
+        return `
+            <div class="subscription-item">
+                <div class="subscription-info">
+                    <div class="subscription-name">${sub.name}</div>
+                    <div class="subscription-next">${t('nextPayment') || 'Следующий платёж'}: ${dateStr}</div>
+                </div>
+                <div class="subscription-price">$${sub.amount.toFixed(2)}</div>
+            </div>
+        `;
+    }).join('');
 }
 
 function updateUpcomingBills() {
@@ -413,14 +438,12 @@ function formatDate(dateStr) {
 document.getElementById('incomeDate').valueAsDate = new Date();
 document.getElementById('expenseDate').valueAsDate = new Date();
 
-// Автосохранение каждые 30 секунд
 setInterval(() => {
     if (data.transactions.length > 0 || data.bills.length > 0) {
         saveData();
     }
 }, 30000);
 
-// Проверка уведомлений каждые 6 часов
 setInterval(checkBillNotifications, 6 * 60 * 60 * 1000);
 
 loadData();

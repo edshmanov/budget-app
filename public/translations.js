@@ -18,6 +18,9 @@ const translations = {
         overdue: 'Просрочен!', today: 'Сегодня', tomorrow: 'Завтра',
         canSave: 'Можно отложить', currentBal: 'Текущий баланс',
         unpaidBills: 'Неоплаченные счета', freeAmount: 'Свободно',
+        subsTitle: 'Подписки', subsPerMonth: 'в месяц',
+        noSubscriptions: 'Нет активных подписок',
+        nextPayment: 'Следующий платёж',
         incomeAdded: 'Доход добавлен!', expenseAdded: 'Расход добавлен!',
         billAdded: 'Счёт добавлен!', billPaid: 'Счёт оплачен!',
         confirmDelete: 'Удалить этот счёт?', confirmLogout: 'Вы уверены, что хотите выйти?'
@@ -41,6 +44,9 @@ const translations = {
         overdue: 'Overdue!', today: 'Today', tomorrow: 'Tomorrow',
         canSave: 'Can Save', currentBal: 'Current Balance',
         unpaidBills: 'Unpaid Bills', freeAmount: 'Available',
+        subsTitle: 'Subscriptions', subsPerMonth: 'per month',
+        noSubscriptions: 'No active subscriptions',
+        nextPayment: 'Next payment',
         incomeAdded: 'Income added!', expenseAdded: 'Expense added!',
         billAdded: 'Bill added!', billPaid: 'Bill paid!',
         confirmDelete: 'Delete this bill?', confirmLogout: 'Are you sure you want to log out?'
@@ -64,6 +70,9 @@ const translations = {
         overdue: 'Прострочено!', today: 'Сьогодні', tomorrow: 'Завтра',
         canSave: 'Можна відкласти', currentBal: 'Поточний баланс',
         unpaidBills: 'Неоплачені рахунки', freeAmount: 'Вільно',
+        subsTitle: 'Підписки', subsPerMonth: 'на місяць',
+        noSubscriptions: 'Немає активних підписок',
+        nextPayment: 'Наступний платіж',
         incomeAdded: 'Дохід додано!', expenseAdded: 'Витрату додано!',
         billAdded: 'Рахунок додано!', billPaid: 'Рахунок оплачено!',
         confirmDelete: 'Видалити цей рахунок?', confirmLogout: 'Ви впевнені, що хочете вийти?'
@@ -95,7 +104,8 @@ function updateAppLanguage() {
         allTransTitle: t.allTrans, statsTitle: t.categoryStats,
         navHome: t.home, navAdd: t.add, navHistory: t.history, navStats: t.stats,
         calcTitle: t.canSave, calcBalance: t.currentBal,
-        calcBills: t.unpaidBills, calcFree: t.freeAmount
+        calcBills: t.unpaidBills, calcFree: t.freeAmount,
+        subsTitle: t.subsTitle, subsPerMonth: t.subsPerMonth
     };
     Object.keys(els).forEach(id => {
         const el = document.getElementById(id);
