@@ -188,3 +188,57 @@ input:focus, select:focus {
 .page.active {display: block;}
 .checkbox-group {display: flex; align-items: center; margin-top: 12px;}
 .checkbox-group input[type="checkbox"] {width: auto; margin-right: 10px;}
+
+/* КАЛЬКУЛЯТОР НАКОПЛЕНИЙ */
+.calculator-section {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 24px;
+}
+.calculator-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+}
+.calculator-icon {
+    font-size: 32px;
+}
+.calculator-title {
+    font-size: 16px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    opacity: 0.9;
+}
+.calculator-amount {
+    font-size: 48px;
+    font-weight: 700;
+    margin: 12px 0 20px;
+}
+.calculator-breakdown {
+    background: rgba(255,255,255,0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 12px;
+    padding: 16px;
+}
+.calc-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    font-size: 15px;
+}
+.calc-row.total {
+    font-size: 18px;
+    font-weight: 700;
+    padding-top: 12px;
+}
+.calc-divider {
+    height: 2px;
+    background: rgba(255,255,255,0.2);
+    margin: 8px 0;
+}
+.negative {
+    color: #fbb6ce;
+}

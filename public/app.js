@@ -4,6 +4,8 @@ let data = {
     bills: []
 };
 
+let notificationsEnabled = false;
+
 function loadData() {
     try {
         const saved = localStorage.getItem('budgetData');
@@ -15,6 +17,8 @@ function loadData() {
         console.error('Ошибка загрузки данных:', e);
     }
     updateUI();
+    requestNotificationPermission();
+    checkBillNotifications();
 }
 
 function saveData() {
@@ -38,11 +42,72 @@ function showSyncStatus() {
     }
 }
 
+// УВЕДОМЛЕНИЯ О СЧЕТАХ
+async function requestNotificationPermission() {
+    if (!('Notification' in window)) {
+        console.log('Браузер не поддерживает уведомления');
+        return;
+    }
+    
+    if (Notification.permission === 'granted') {
+        notificationsEnabled = true;
+        return;
+    }
+    
+    if (Notification.permission !== 'denied') {
+        const permission = await Notification.requestPermission();
+        notificationsEnabled = permission === 'granted';
+    }
+}
+
+function checkBillNotifications() {
+    if (!notificationsEnabled) return;
+    
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    
+    data.bills.forEach(bill => {
+        if (bill.paid) return;
+        
+        const dueDate = new Date(bill.due);
+        dueDate.setHours(0, 0, 0, 0);
+        
+        // Уведомление за день до срока
+        if (dueDate.getTime() === tomorrow.getTime()) {
+            showNotification(
+                '⏰ Напоминание о счёте',
+                `Завтра нужно оплатить: ${bill.name} ($${bill.amount.toFixed(2)})`
+            );
+        }
+        
+        // Уведомление о просрочке
+        if (dueDate < today) {
+            showNotification(
+                '🚨 Просроченный счёт!',
+                `${bill.name} ($${bill.amount.toFixed(2)}) - срок оплаты истёк`
+            );
+        }
+    });
+}
+
+function showNotification(title, body) {
+    if (!notificationsEnabled) return;
+    
+    new Notification(title, {
+        body: body,
+        icon: '💰',
+        badge: '💰',
+        tag: 'budget-bill',
+        requireInteraction: false
+    });
+}
+
 async function logout() {
     if (confirm(t('confirmLogout') || 'Выйти?')) {
         try {
             await fetch('/api/logout', { method: 'POST' });
-            localStorage.removeItem('budgetData'); // Очищаем данные при выходе
             window.location.href = '/login';
         } catch (error) {
             console.error('Logout error:', error);
@@ -133,6 +198,7 @@ document.getElementById('billForm').addEventListener('submit', function(e) {
     
     saveData();
     updateUI();
+    checkBillNotifications();
     this.reset();
     alert(t('billAdded') || 'Счёт добавлен!');
 });
@@ -176,6 +242,7 @@ function deleteBill(billId) {
 
 function updateUI() {
     updateBalance();
+    updateSavingsCalculator();
     updateUpcomingBills();
     updateRecentTransactions();
     updateAllTransactions();
@@ -200,6 +267,29 @@ function updateBalance() {
     
     document.getElementById('monthIncome').textContent = '$' + monthIncome.toFixed(2);
     document.getElementById('monthExpense').textContent = '$' + monthExpense.toFixed(2);
+}
+
+// КАЛЬКУЛЯТОР НАКОПЛЕНИЙ
+function updateSavingsCalculator() {
+    const unpaidBills = data.bills.filter(b => !b.paid);
+    const totalBills = unpaidBills.reduce((sum, bill) => sum + bill.amount, 0);
+    const savingsAmount = data.balance - totalBills;
+    
+    document.getElementById('savingsAmount').textContent = '$' + savingsAmount.toFixed(2);
+    document.getElementById('calcBalanceAmount').textContent = '$' + data.balance.toFixed(2);
+    document.getElementById('calcBillsAmount').textContent = '-$' + totalBills.toFixed(2);
+    document.getElementById('calcFreeAmount').textContent = '$' + savingsAmount.toFixed(2);
+    
+    // Меняем цвет если нельзя откладывать
+    const calcAmount = document.getElementById('savingsAmount');
+    const calcFree = document.getElementById('calcFreeAmount');
+    if (savingsAmount < 0) {
+        calcAmount.style.color = '#fbb6ce';
+        calcFree.style.color = '#fbb6ce';
+    } else {
+        calcAmount.style.color = 'white';
+        calcFree.style.color = 'white';
+    }
 }
 
 function updateUpcomingBills() {
@@ -329,5 +419,8 @@ setInterval(() => {
         saveData();
     }
 }, 30000);
+
+// Проверка уведомлений каждые 6 часов
+setInterval(checkBillNotifications, 6 * 60 * 60 * 1000);
 
 loadData();

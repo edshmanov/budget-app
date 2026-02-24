@@ -15,7 +15,12 @@ const translations = {
         entertainment: 'Развлечения', health: 'Здоровье', other: 'Другое',
         noBills: 'Нет предстоящих счетов', noTrans: 'Нет транзакций',
         noStats: 'Нет расходов для анализа',
-        overdue: 'Просрочен!', today: 'Сегодня', tomorrow: 'Завтра'
+        overdue: 'Просрочен!', today: 'Сегодня', tomorrow: 'Завтра',
+        canSave: 'Можно отложить', currentBal: 'Текущий баланс',
+        unpaidBills: 'Неоплаченные счета', freeAmount: 'Свободно',
+        incomeAdded: 'Доход добавлен!', expenseAdded: 'Расход добавлен!',
+        billAdded: 'Счёт добавлен!', billPaid: 'Счёт оплачен!',
+        confirmDelete: 'Удалить этот счёт?', confirmLogout: 'Вы уверены, что хотите выйти?'
     },
     en: {
         balance: 'Current Balance', synced: 'Synced', saved: 'Saved',
@@ -33,7 +38,12 @@ const translations = {
         entertainment: 'Entertainment', health: 'Health', other: 'Other',
         noBills: 'No upcoming bills', noTrans: 'No transactions',
         noStats: 'No expenses to analyze',
-        overdue: 'Overdue!', today: 'Today', tomorrow: 'Tomorrow'
+        overdue: 'Overdue!', today: 'Today', tomorrow: 'Tomorrow',
+        canSave: 'Can Save', currentBal: 'Current Balance',
+        unpaidBills: 'Unpaid Bills', freeAmount: 'Available',
+        incomeAdded: 'Income added!', expenseAdded: 'Expense added!',
+        billAdded: 'Bill added!', billPaid: 'Bill paid!',
+        confirmDelete: 'Delete this bill?', confirmLogout: 'Are you sure you want to log out?'
     },
     uk: {
         balance: 'Поточний баланс', synced: 'Синхронізовано', saved: 'Збережено',
@@ -51,7 +61,12 @@ const translations = {
         entertainment: 'Розваги', health: 'Здоров\'я', other: 'Інше',
         noBills: 'Немає майбутніх рахунків', noTrans: 'Немає транзакцій',
         noStats: 'Немає витрат для аналізу',
-        overdue: 'Прострочено!', today: 'Сьогодні', tomorrow: 'Завтра'
+        overdue: 'Прострочено!', today: 'Сьогодні', tomorrow: 'Завтра',
+        canSave: 'Можна відкласти', currentBal: 'Поточний баланс',
+        unpaidBills: 'Неоплачені рахунки', freeAmount: 'Вільно',
+        incomeAdded: 'Дохід додано!', expenseAdded: 'Витрату додано!',
+        billAdded: 'Рахунок додано!', billPaid: 'Рахунок оплачено!',
+        confirmDelete: 'Видалити цей рахунок?', confirmLogout: 'Ви впевнені, що хочете вийти?'
     }
 };
 
@@ -78,14 +93,15 @@ function updateAppLanguage() {
         addIncomeBtn: t.addIncome, addExpenseBtn: t.addExpense, addBillBtn: t.addBill,
         billNameLabel: t.billName, dueLabel: t.dueDate, recurringLabel: t.recurring,
         allTransTitle: t.allTrans, statsTitle: t.categoryStats,
-        navHome: t.home, navAdd: t.add, navHistory: t.history, navStats: t.stats
+        navHome: t.home, navAdd: t.add, navHistory: t.history, navStats: t.stats,
+        calcTitle: t.canSave, calcBalance: t.currentBal,
+        calcBills: t.unpaidBills, calcFree: t.freeAmount
     };
     Object.keys(els).forEach(id => {
         const el = document.getElementById(id);
         if (el) el.textContent = els[id];
     });
     
-    // Update categories
     const cats = [
         ['utilities', t.utilities], ['education', t.education],
         ['subscriptions', t.subscriptions], ['creditCards', t.creditCards],
@@ -102,7 +118,6 @@ function updateAppLanguage() {
         }
     });
     
-    // Update lang buttons
     document.querySelectorAll('.lang-btn-app').forEach(btn => {
         btn.classList.toggle('active', btn.dataset.lang === currentLang);
     });
@@ -116,7 +131,6 @@ function getCategoryName(key) {
     return translations[currentLang][key] || key;
 }
 
-// Init on load
 setTimeout(() => {
     updateAppLanguage();
     
