@@ -1,7 +1,8 @@
 let data = {
     balance: 0,
     transactions: [],
-    bills: []
+    bills: [],
+    goals: []
 };
 
 let notificationsEnabled = false;
@@ -11,6 +12,7 @@ function loadData() {
         const saved = localStorage.getItem('budgetData');
         if (saved) {
             data = JSON.parse(saved);
+            if (!data.goals) data.goals = [];
             console.log('✅ Данные загружены:', data);
         }
     } catch (e) {
@@ -28,7 +30,7 @@ function saveData() {
         showSyncStatus();
     } catch (e) {
         console.error('Ошибка сохранения данных:', e);
-        alert('Ошибка сохранения! Проверьте место в хранилище.');
+        alert('Ошибка сохранения!');
     }
 }
 
@@ -43,16 +45,11 @@ function showSyncStatus() {
 }
 
 async function requestNotificationPermission() {
-    if (!('Notification' in window)) {
-        console.log('Браузер не поддерживает уведомления');
-        return;
-    }
-    
+    if (!('Notification' in window)) return;
     if (Notification.permission === 'granted') {
         notificationsEnabled = true;
         return;
     }
-    
     if (Notification.permission !== 'denied') {
         const permission = await Notification.requestPermission();
         notificationsEnabled = permission === 'granted';
@@ -61,7 +58,6 @@ async function requestNotificationPermission() {
 
 function checkBillNotifications() {
     if (!notificationsEnabled) return;
-    
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     const tomorrow = new Date(today);
@@ -69,36 +65,21 @@ function checkBillNotifications() {
     
     data.bills.forEach(bill => {
         if (bill.paid) return;
-        
         const dueDate = new Date(bill.due);
         dueDate.setHours(0, 0, 0, 0);
         
         if (dueDate.getTime() === tomorrow.getTime()) {
-            showNotification(
-                '⏰ Напоминание о счёте',
-                `Завтра нужно оплатить: ${bill.name} ($${bill.amount.toFixed(2)})`
-            );
+            showNotification('⏰ Напоминание о счёте', `Завтра: ${bill.name} ($${bill.amount.toFixed(2)})`);
         }
-        
         if (dueDate < today) {
-            showNotification(
-                '🚨 Просроченный счёт!',
-                `${bill.name} ($${bill.amount.toFixed(2)}) - срок оплаты истёк`
-            );
+            showNotification('🚨 Просроченный счёт!', `${bill.name} ($${bill.amount.toFixed(2)})`);
         }
     });
 }
 
 function showNotification(title, body) {
     if (!notificationsEnabled) return;
-    
-    new Notification(title, {
-        body: body,
-        icon: '💰',
-        badge: '💰',
-        tag: 'budget-bill',
-        requireInteraction: false
-    });
+    new Notification(title, {body: body, icon: '💰', badge: '💰'});
 }
 
 async function logout() {
@@ -107,7 +88,6 @@ async function logout() {
             await fetch('/api/logout', { method: 'POST' });
             window.location.href = '/login';
         } catch (error) {
-            console.error('Logout error:', error);
             window.location.href = '/login';
         }
     }
@@ -128,6 +108,106 @@ function switchTab(tab) {
     document.getElementById(tab + 'Tab').classList.add('active');
 }
 
+// БЫСТРЫЕ КНОПКИ
+function quickIncome() {
+    const amount = prompt(t('amount') || 'Сумма зарплаты:', '1200');
+    if (!amount) return;
+    
+    data.transactions.push({
+        id: Date.now(),
+        type: 'income',
+        amount: parseFloat(amount),
+        description: t('quickIncome') || 'Зарплата',
+        date: new Date().toISOString().split('T')[0],
+        category: 'income'
+    });
+    
+    data.balance += parseFloat(amount);
+    saveData();
+    updateUI();
+    alert(t('incomeAdded') || 'Доход добавлен!');
+}
+
+function quickGroceries() {
+    const amount = prompt(t('amount') || 'Сумма на продукты:', '50');
+    if (!amount) return;
+    
+    data.transactions.push({
+        id: Date.now(),
+        type: 'expense',
+        amount: parseFloat(amount),
+        description: t('quickGroceries') || 'Продукты',
+        date: new Date().toISOString().split('T')[0],
+        category: 'groceries'
+    });
+    
+    data.balance -= parseFloat(amount);
+    saveData();
+    updateUI();
+    alert(t('expenseAdded') || 'Расход добавлен!');
+}
+
+function quickGas() {
+    const amount = prompt(t('amount') || 'Сумма на бензин:', '40');
+    if (!amount) return;
+    
+    data.transactions.push({
+        id: Date.now(),
+        type: 'expense',
+        amount: parseFloat(amount),
+        description: t('quickGas') || 'Бензин',
+        date: new Date().toISOString().split('T')[0],
+        category: 'transport'
+    });
+    
+    data.balance -= parseFloat(amount);
+    saveData();
+    updateUI();
+    alert(t('expenseAdded') || 'Расход добавлен!');
+}
+
+// ЦЕЛИ НАКОПЛЕНИЯ
+function showAddGoal() {
+    document.getElementById('addGoalForm').style.display = 'block';
+}
+
+function cancelGoal() {
+    document.getElementById('addGoalForm').style.display = 'none';
+    document.getElementById('goalName').value = '';
+    document.getElementById('goalAmount').value = '';
+}
+
+function saveGoal() {
+    const name = document.getElementById('goalName').value;
+    const amount = parseFloat(document.getElementById('goalAmount').value);
+    
+    if (!name || !amount) {
+        alert('Заполните все поля!');
+        return;
+    }
+    
+    data.goals.push({
+        id: Date.now(),
+        name: name,
+        targetAmount: amount,
+        currentAmount: 0
+    });
+    
+    saveData();
+    updateUI();
+    cancelGoal();
+    alert(t('goalAdded') || 'Цель добавлена!');
+}
+
+function deleteGoal(goalId) {
+    if (confirm(t('confirmDeleteGoal') || 'Удалить эту цель?')) {
+        data.goals = data.goals.filter(g => g.id !== goalId);
+        saveData();
+        updateUI();
+    }
+}
+
+// ФОРМЫ
 document.getElementById('incomeForm').addEventListener('submit', function(e) {
     e.preventDefault();
     const amount = parseFloat(document.getElementById('incomeAmount').value);
@@ -240,11 +320,14 @@ function deleteBill(billId) {
 function updateUI() {
     updateBalance();
     updateSavingsCalculator();
+    updateGoals();
     updateSubscriptions();
     updateUpcomingBills();
     updateRecentTransactions();
     updateAllTransactions();
     updateCategoryStats();
+    updateInsights();
+    updateExpenseChart();
 }
 
 function updateBalance() {
@@ -288,7 +371,38 @@ function updateSavingsCalculator() {
     }
 }
 
-// ПОДПИСКИ
+function updateGoals() {
+    const container = document.getElementById('goalsList');
+    if (data.goals.length === 0) {
+        container.innerHTML = `<div class="empty-state">${t('noGoals') || 'Нет целей накопления'}</div>`;
+        return;
+    }
+    
+    container.innerHTML = data.goals.map(goal => {
+        const progress = (goal.currentAmount / goal.targetAmount * 100).toFixed(0);
+        const remaining = goal.targetAmount - goal.currentAmount;
+        
+        return `
+            <div class="goal-item">
+                <div class="goal-header">
+                    <div class="goal-name">${goal.name}</div>
+                    <button class="goal-delete" onclick="deleteGoal(${goal.id})">✕</button>
+                </div>
+                <div class="goal-progress-text">
+                    $${goal.currentAmount.toFixed(2)} из $${goal.targetAmount.toFixed(2)}
+                </div>
+                <div class="goal-progress-bar">
+                    <div class="goal-progress-fill" style="width: ${progress}%"></div>
+                </div>
+                <div class="goal-stats">
+                    <span>${progress}%</span>
+                    <span>${t('freeAmount') || 'Осталось'}: $${remaining.toFixed(2)}</span>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
 function updateSubscriptions() {
     const container = document.getElementById('subscriptionsList');
     const subscriptions = data.bills.filter(b => b.category === 'subscriptions' && b.recurring);
@@ -297,19 +411,16 @@ function updateSubscriptions() {
     document.getElementById('subsTotal').textContent = '$' + totalMonth.toFixed(2);
     
     if (subscriptions.length === 0) {
-        container.innerHTML = `<div class="subscription-empty">${t('noSubscriptions') || 'Нет активных подписок'}</div>`;
+        container.innerHTML = `<div class="subscription-empty">${t('noSubscriptions') || 'Нет подписок'}</div>`;
         return;
     }
     
     container.innerHTML = subscriptions.map(sub => {
-        const nextDate = new Date(sub.due);
-        const dateStr = formatDate(sub.due);
-        
         return `
             <div class="subscription-item">
                 <div class="subscription-info">
                     <div class="subscription-name">${sub.name}</div>
-                    <div class="subscription-next">${t('nextPayment') || 'Следующий платёж'}: ${dateStr}</div>
+                    <div class="subscription-next">${t('nextPayment') || 'Следующий'}: ${formatDate(sub.due)}</div>
                 </div>
                 <div class="subscription-price">$${sub.amount.toFixed(2)}</div>
             </div>
@@ -336,7 +447,7 @@ function updateUpcomingBills() {
         if (isOverdue) dueText = `<span class="bill-overdue">${t('overdue')}</span>`;
         else if (daysUntil === 0) dueText = t('today');
         else if (daysUntil === 1) dueText = t('tomorrow');
-        else dueText = `${daysUntil} ${t('daysLeft') || 'дн.'}`;
+        else dueText = `${daysUntil} дн.`;
         
         return `
             <div class="bill-item">
@@ -427,6 +538,117 @@ function updateCategoryStats() {
             </div>
         `;
     }).join('');
+}
+
+// УМНЫЕ СОВЕТЫ
+function updateInsights() {
+    const insights = [];
+    const now = new Date();
+    const thisMonth = now.getMonth();
+    const lastMonth = thisMonth === 0 ? 11 : thisMonth - 1;
+    
+    let thisMonthExpenses = 0;
+    let lastMonthExpenses = 0;
+    
+    data.transactions.forEach(t => {
+        if (t.type === 'expense') {
+            const tDate = new Date(t.date);
+            if (tDate.getMonth() === thisMonth) thisMonthExpenses += t.amount;
+            if (tDate.getMonth() === lastMonth) lastMonthExpenses += t.amount;
+        }
+    });
+    
+    if (lastMonthExpenses > 0) {
+        const change = ((thisMonthExpenses - lastMonthExpenses) / lastMonthExpenses * 100).toFixed(0);
+        if (Math.abs(change) > 10) {
+            if (change > 0) {
+                insights.push(`📈 Расходы выросли на ${change}% по сравнению с прошлым месяцем`);
+            } else {
+                insights.push(`📉 Отлично! Расходы снизились на ${Math.abs(change)}%`);
+            }
+        }
+    }
+    
+    const subscriptions = data.bills.filter(b => b.category === 'subscriptions' && b.recurring);
+    if (subscriptions.length > 2) {
+        insights.push(`💳 У вас ${subscriptions.length} активных подписок. Возможно, какие-то не используются?`);
+    }
+    
+    const unpaidBills = data.bills.filter(b => !b.paid);
+    const totalBills = unpaidBills.reduce((sum, b) => sum + b.amount, 0);
+    if (totalBills > data.balance) {
+        insights.push(`⚠️ Сумма счетов ($${totalBills.toFixed(2)}) превышает баланс. Запланируйте пополнение!`);
+    }
+    
+    const container = document.getElementById('insightsList');
+    const section = document.getElementById('insightsSection');
+    
+    if (insights.length === 0) {
+        section.style.display = 'none';
+        return;
+    }
+    
+    section.style.display = 'block';
+    container.innerHTML = insights.map(insight => `
+        <div class="insight-item">${insight}</div>
+    `).join('');
+}
+
+// ГРАФИК РАСХОДОВ
+function updateExpenseChart() {
+    const container = document.getElementById('expenseChart');
+    const monthlyExpenses = {};
+    
+    for (let i = 5; i >= 0; i--) {
+        const date = new Date();
+        date.setMonth(date.getMonth() - i);
+        const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+        monthlyExpenses[key] = 0;
+    }
+    
+    data.transactions.forEach(t => {
+        if (t.type === 'expense') {
+            const tDate = new Date(t.date);
+            const key = `${tDate.getFullYear()}-${String(tDate.getMonth() + 1).padStart(2, '0')}`;
+            if (monthlyExpenses[key] !== undefined) {
+                monthlyExpenses[key] += t.amount;
+            }
+        }
+    });
+    
+    const maxExpense = Math.max(...Object.values(monthlyExpenses), 1);
+    
+    container.innerHTML = Object.entries(monthlyExpenses).map(([key, amount]) => {
+        const [year, month] = key.split('-');
+        const monthNames = ['Янв', 'Фев', 'Мар', 'Апр', 'Май', 'Июн', 'Июл', 'Авг', 'Сен', 'Окт', 'Ноя', 'Дек'];
+        const monthName = monthNames[parseInt(month) - 1];
+        const width = (amount / maxExpense * 100).toFixed(1);
+        
+        return `
+            <div class="chart-bar-row">
+                <div class="chart-month">${monthName}</div>
+                <div class="chart-bar">
+                    <div class="chart-bar-fill" style="width: ${width}%"></div>
+                </div>
+                <div class="chart-amount">$${amount.toFixed(0)}</div>
+            </div>
+        `;
+    }).join('');
+}
+
+// ЭКСПОРТ В EXCEL
+function exportToExcel() {
+    let csv = 'Дата,Тип,Категория,Описание,Сумма\n';
+    
+    data.transactions.forEach(t => {
+        csv += `${t.date},${t.type === 'income' ? 'Доход' : 'Расход'},${getCategoryName(t.category)},${t.description},${t.amount}\n`;
+    });
+    
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = `budget_${new Date().toISOString().split('T')[0]}.csv`;
+    link.click();
 }
 
 function formatDate(dateStr) {
