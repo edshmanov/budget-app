@@ -19,11 +19,17 @@ const translations = {
         canSave: 'Можно отложить', currentBal: 'Текущий баланс',
         unpaidBills: 'Неоплаченные счета', freeAmount: 'Свободно',
         subsTitle: 'Подписки', subsPerMonth: 'в месяц',
-        noSubscriptions: 'Нет активных подписок',
-        nextPayment: 'Следующий платёж',
+        noSubscriptions: 'Нет активных подписок', nextPayment: 'Следующий платёж',
+        goalsTitle: 'Цели накопления', noGoals: 'Нет целей накопления',
+        quickTitle: '⚡ Быстрое добавление', quickIncome: '💵 Зарплата',
+        quickGroceries: '🛒 Продукты', quickGas: '⛽ Бензин',
+        insightsTitle: 'Умные советы', chartTitle: 'Тренд расходов (6 мес.)',
+        exportBtn: '📊 Excel',
         incomeAdded: 'Доход добавлен!', expenseAdded: 'Расход добавлен!',
         billAdded: 'Счёт добавлен!', billPaid: 'Счёт оплачен!',
-        confirmDelete: 'Удалить этот счёт?', confirmLogout: 'Вы уверены, что хотите выйти?'
+        goalAdded: 'Цель добавлена!', goalDeleted: 'Цель удалена!',
+        confirmDelete: 'Удалить этот счёт?', confirmDeleteGoal: 'Удалить эту цель?',
+        confirmLogout: 'Вы уверены, что хотите выйти?'
     },
     en: {
         balance: 'Current Balance', synced: 'Synced', saved: 'Saved',
@@ -45,11 +51,17 @@ const translations = {
         canSave: 'Can Save', currentBal: 'Current Balance',
         unpaidBills: 'Unpaid Bills', freeAmount: 'Available',
         subsTitle: 'Subscriptions', subsPerMonth: 'per month',
-        noSubscriptions: 'No active subscriptions',
-        nextPayment: 'Next payment',
+        noSubscriptions: 'No active subscriptions', nextPayment: 'Next payment',
+        goalsTitle: 'Savings Goals', noGoals: 'No savings goals',
+        quickTitle: '⚡ Quick Add', quickIncome: '💵 Salary',
+        quickGroceries: '🛒 Groceries', quickGas: '⛽ Gas',
+        insightsTitle: 'Smart Insights', chartTitle: 'Expense Trend (6 mo.)',
+        exportBtn: '📊 Excel',
         incomeAdded: 'Income added!', expenseAdded: 'Expense added!',
         billAdded: 'Bill added!', billPaid: 'Bill paid!',
-        confirmDelete: 'Delete this bill?', confirmLogout: 'Are you sure you want to log out?'
+        goalAdded: 'Goal added!', goalDeleted: 'Goal deleted!',
+        confirmDelete: 'Delete this bill?', confirmDeleteGoal: 'Delete this goal?',
+        confirmLogout: 'Are you sure you want to log out?'
     },
     uk: {
         balance: 'Поточний баланс', synced: 'Синхронізовано', saved: 'Збережено',
@@ -71,11 +83,17 @@ const translations = {
         canSave: 'Можна відкласти', currentBal: 'Поточний баланс',
         unpaidBills: 'Неоплачені рахунки', freeAmount: 'Вільно',
         subsTitle: 'Підписки', subsPerMonth: 'на місяць',
-        noSubscriptions: 'Немає активних підписок',
-        nextPayment: 'Наступний платіж',
+        noSubscriptions: 'Немає активних підписок', nextPayment: 'Наступний платіж',
+        goalsTitle: 'Цілі накопичення', noGoals: 'Немає цілей накопичення',
+        quickTitle: '⚡ Швидке додавання', quickIncome: '💵 Зарплата',
+        quickGroceries: '🛒 Продукти', quickGas: '⛽ Бензин',
+        insightsTitle: 'Розумні поради', chartTitle: 'Тренд витрат (6 міс.)',
+        exportBtn: '📊 Excel',
         incomeAdded: 'Дохід додано!', expenseAdded: 'Витрату додано!',
         billAdded: 'Рахунок додано!', billPaid: 'Рахунок оплачено!',
-        confirmDelete: 'Видалити цей рахунок?', confirmLogout: 'Ви впевнені, що хочете вийти?'
+        goalAdded: 'Ціль додано!', goalDeleted: 'Ціль видалено!',
+        confirmDelete: 'Видалити цей рахунок?', confirmDeleteGoal: 'Видалити цю ціль?',
+        confirmLogout: 'Ви впевнені, що хочете вийти?'
     }
 };
 
@@ -105,7 +123,12 @@ function updateAppLanguage() {
         navHome: t.home, navAdd: t.add, navHistory: t.history, navStats: t.stats,
         calcTitle: t.canSave, calcBalance: t.currentBal,
         calcBills: t.unpaidBills, calcFree: t.freeAmount,
-        subsTitle: t.subsTitle, subsPerMonth: t.subsPerMonth
+        subsTitle: t.subsTitle, subsPerMonth: t.subsPerMonth,
+        goalsTitle: t.goalsTitle, quickTitle: t.quickTitle,
+        quickIncomeBtn: t.quickIncome, quickGroceriesBtn: t.quickGroceries,
+        quickGasBtn: t.quickGas, insightsTitle: t.insightsTitle,
+        chartTitle: t.chartTitle, exportBtn: t.exportBtn,
+        addGoalBtn: t.addGoalBtn, saveGoalBtn: 'Сохранить', cancelGoalBtn: 'Отмена'
     };
     Object.keys(els).forEach(id => {
         const el = document.getElementById(id);
