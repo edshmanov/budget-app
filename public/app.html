@@ -36,7 +36,14 @@
                 </div>
             </div>
 
-            <!-- КАЛЬКУЛЯТОР НАКОПЛЕНИЙ -->
+            <div class="section insights-section" id="insightsSection" style="display:none;">
+                <div class="insights-header">
+                    <span class="insights-icon">💡</span>
+                    <span class="insights-title" id="insightsTitle">Умные советы</span>
+                </div>
+                <div id="insightsList"></div>
+            </div>
+
             <div class="section calculator-section">
                 <div class="calculator-header">
                     <span class="calculator-icon">💰</span>
@@ -60,7 +67,25 @@
                 </div>
             </div>
 
-            <!-- ПОДПИСКИ -->
+            <div class="section goals-section">
+                <div class="goals-header">
+                    <div>
+                        <span class="goals-icon">🎯</span>
+                        <span class="goals-title" id="goalsTitle">Цели накопления</span>
+                    </div>
+                    <button class="btn-add-goal" onclick="showAddGoal()" id="addGoalBtn">+</button>
+                </div>
+                <div id="goalsList"></div>
+                <div id="addGoalForm" class="add-goal-form" style="display:none;">
+                    <input type="text" id="goalName" placeholder="Название цели" class="goal-input">
+                    <input type="number" id="goalAmount" placeholder="Сумма" step="0.01" class="goal-input">
+                    <div class="goal-form-buttons">
+                        <button class="btn-save-goal" onclick="saveGoal()" id="saveGoalBtn">Сохранить</button>
+                        <button class="btn-cancel-goal" onclick="cancelGoal()" id="cancelGoalBtn">Отмена</button>
+                    </div>
+                </div>
+            </div>
+
             <div class="section subscriptions-section">
                 <div class="subscription-header">
                     <div>
@@ -83,8 +108,25 @@
                 <div class="section-title" id="transTitle">Последние транзакции</div>
                 <div id="recentTransactions"></div>
             </div>
+
+            <div class="section chart-section">
+                <div class="chart-header">
+                    <span class="chart-title" id="chartTitle">Тренд расходов (6 мес.)</span>
+                </div>
+                <div id="expenseChart"></div>
+            </div>
         </div>
+
         <div id="addPage" class="page">
+            <div class="section quick-actions-section">
+                <div class="quick-actions-title" id="quickTitle">⚡ Быстрое добавление</div>
+                <div class="quick-buttons">
+                    <button class="quick-btn income" onclick="quickIncome()" id="quickIncomeBtn">💵 Зарплата</button>
+                    <button class="quick-btn expense" onclick="quickGroceries()" id="quickGroceriesBtn">🛒 Продукты</button>
+                    <button class="quick-btn expense" onclick="quickGas()" id="quickGasBtn">⛽ Бензин</button>
+                </div>
+            </div>
+
             <div class="section">
                 <div class="tabs">
                     <button class="tab active" onclick="switchTab('income')" id="tabIncome">Доход</button>
@@ -158,7 +200,10 @@
         </div>
         <div id="transactionsPage" class="page">
             <div class="section">
-                <div class="section-title" id="allTransTitle">Все транзакции</div>
+                <div class="section-header">
+                    <div class="section-title" id="allTransTitle">Все транзакции</div>
+                    <button class="btn-export" onclick="exportToExcel()" id="exportBtn">📊 Excel</button>
+                </div>
                 <div class="transaction-list" id="allTransactions"></div>
             </div>
         </div>
